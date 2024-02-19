@@ -86,7 +86,16 @@ export default class OrderRepository implements OrderRepositoryInterface {
         });
     }
 
-    async update(): Promise<void> {
-        console.log("It's not used in this project.");
+    async update(order: Order): Promise<void> {
+        await OrderModel.update(
+            {
+                name: order.customerId
+            },
+            {
+                where: {
+                    id: order.id
+                }
+            }
+        );
     }
 }
