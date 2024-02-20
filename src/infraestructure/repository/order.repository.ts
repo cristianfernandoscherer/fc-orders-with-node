@@ -89,7 +89,7 @@ export default class OrderRepository implements OrderRepositoryInterface {
     async update(order: Order): Promise<void> {
         await OrderModel.update(
             {
-                name: order.customerId
+                customer_id: order.customerId
             },
             {
                 where: {

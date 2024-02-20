@@ -180,9 +180,11 @@ describe("Order repository test", () => {
 
         await orderRepository.update(foundOrder);
 
-        const orderUpdated = await OrderModel.findOne({ where: { id: "123" } });
+        const orderUpdated = await orderRepository.find("123");
 
-        expect(orderUpdated?.customer_id).toEqual("1234");
+        console.log(orderUpdated);
+
+        expect(orderUpdated.customerId).toEqual("1234");
 
 
     });

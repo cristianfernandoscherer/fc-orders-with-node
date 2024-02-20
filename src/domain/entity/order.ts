@@ -18,7 +18,7 @@ export default class Order {
     }
 
     get customerId(): string {
-        return this._id;
+        return this._customerId;
     }
 
     get items(): OrderItem[] {
