@@ -141,4 +141,49 @@ describe("Order repository test", () => {
 
         expect(orders).toEqual(foundOrders);
     });
+
+    it("change order customer", async () => {
+        const customerRepository = new CustomerRepository();
+        const customer = new Customer("123", "Customer 1");
+        const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
+        customer.changeAddress(address);
+        await customerRepository.create(customer);
+
+        const productRepository = new ProductRepository();
+        const product = new Product("123", "Product 1", 10);
+        await productRepository.create(product);
+
+        const orderItem = new OrderItem(
+            "1",
+            product.name,
+            product.price,
+            2,
+            product.id,
+        );
+
+        const order = new Order("123", "123", [orderItem]);
+
+        const orderRepository = new OrderRepository();
+        await orderRepository.create(order);
+
+        const foundOrder = await orderRepository.find("123");
+
+        expect(order).toEqual(foundOrder);
+
+
+        const customerNew = new Customer("1234", "Customer 2");
+        const addressNew = new Address("Street 2", 1, "Zipcode 2", "City 1");
+        customerNew.changeAddress(addressNew);
+        await customerRepository.create(customerNew);
+
+        foundOrder.changeCustomerId(customerNew.id);
+
+        await orderRepository.update(foundOrder);
+
+        const orderUpdated = await OrderModel.findOne({ where: { id: "123" } });
+
+        expect(orderUpdated?.customer_id).toEqual("1234");
+
+
+    });
 });
