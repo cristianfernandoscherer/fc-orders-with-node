@@ -161,6 +161,7 @@ describe("Order repository test", () => {
             product.id,
         );
 
+        // Create order
         const order = new Order("123", "123", [orderItem]);
 
         const orderRepository = new OrderRepository();
@@ -170,7 +171,7 @@ describe("Order repository test", () => {
 
         expect(order).toEqual(foundOrder);
 
-
+        // Change customer 
         const customerNew = new Customer("1234", "Customer 2");
         const addressNew = new Address("Street 2", 1, "Zipcode 2", "City 1");
         customerNew.changeAddress(addressNew);
@@ -178,14 +179,25 @@ describe("Order repository test", () => {
 
         foundOrder.changeCustomerId(customerNew.id);
 
+        // Add item 
+        const productNew = new Product("1235", "Product 2", 5);
+        await productRepository.create(productNew);
+        const orderItemNew = new OrderItem(
+            "2",
+            productNew.name,
+            productNew.price,
+            2,
+            productNew.id,
+        );
+
+        // Update order
+        foundOrder.addItem(orderItemNew)
         await orderRepository.update(foundOrder);
 
         const orderUpdated = await orderRepository.find("123");
 
-        console.log(orderUpdated);
-
         expect(orderUpdated.customerId).toEqual("1234");
-
-
+        expect(orderUpdated.items.length).toEqual(2);
+        expect(orderUpdated.total()).toEqual(30);
     });
 });
